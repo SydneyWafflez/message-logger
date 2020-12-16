@@ -6,6 +6,8 @@ console.log('Message logger is now running under key:');
 console.log(process.env.BOT_KEY);
 console.log();
 console.log(process.env.STARTMESSAGE);
+console.log('Version 1.1 - Go to GitHub to find the latest releases.')
+
 
 //Client Class?
 const { Client, MessageEmbed } = require('discord.js')
