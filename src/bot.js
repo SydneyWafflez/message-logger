@@ -6,8 +6,7 @@ console.log('Message logger is now running under key:');
 console.log(process.env.BOT_KEY);
 console.log();
 console.log(process.env.STARTMESSAGE);
-console.log('Version 1.1 - Go to GitHub to find the latest releases.')
-
+console.log('Version 2 - Go to GitHub to find the latest releases.')
 
 //Client Class?
 const { Client, MessageEmbed } = require('discord.js')
@@ -26,6 +25,10 @@ client.on('voiceStateUpdate', (oldState, newState) => {
 
 //Ready
 client.on('ready', () => {
+
+    client.user.setPresence({ activity: { name: `with Sydney :3` }, status: 'idle' });
+
+    console.clear
     console.log( );
     console.log(`[${process.env.DEV_NAME}'s message logger] ${client.user.tag} is logged in!`);
     console.log();
@@ -37,7 +40,7 @@ client.on('message', (message) => {
     console.log(`[MESSAGE LOGS] ${message.author.username} in ${message.channel.guild} (#${message.channel.name}): ${message.content}`);
     
     //HELP COMMAND
-    if (message.content === '-help') {
+    if (message.content === '-welcome') {
         const embed = new MessageEmbed()
                 .setTitle("Welcome to Elite's Message Logger!")
                 .setAuthor("Sydney", "https://usdevs.net/SydHalloween2.gif","https://sydneym.dev")
@@ -46,11 +49,19 @@ client.on('message', (message) => {
                 .setFooter('Sydneys Message Logger V1, "https://i.imgur.com/w1vhFSR.png"')
                 .setThumbnail("https://images.discordapp.net/avatars/298822483060981760/c5f04275e99defe458fc7ebbef0d5e72.png?size=128")
                 .setTimestamp();
-
-        message.channel.send(embed);
+        message.channel.send(embed)
+    } 
+      else if (message.content === `-me`) {
+            message.channel.send(`Here is all of the info I can find on you`)
+            message.channel.send(`USERNAME: ${message.author.username}`)
+            message.channel.send(`ID: ${message.author.id}`);
+            message.channel.send(`Created: ${message.author.createdAt}`);
+            message.channel.send(`Activity: ${message.author.presence}`);
+            message.channel.send(`Avatar: ${message.author.avatar}`);
+        }
 
     //TODO COMMAND
-        if (message.content === '-todo') {
+        else if (message.content === '-todo') {
             const dembed = new MessageEmbed()
                 .setTitle("Planned features")
                 .setAuthor("Sydney", "https://usdevs.net/SydHalloween2.gif","https://sydneym.dev")
@@ -60,7 +71,39 @@ client.on('message', (message) => {
                 .setImage("http://i.imgur.com/yVpymuV.png")
                 .setThumbnail("https://images.discordapp.net/avatars/298822483060981760/c5f04275e99defe458fc7ebbef0d5e72.png?size=128")
                 .setTimestamp();
+            message.channel.send(dembed)
+        }
     
-            message.channel.send(dembed);
+        else if (message.content === '-kick') {
 
-}}});
+            //kicking
+
+        }
+
+        else if (message.content === '-ban') {
+
+            //banning
+
+        }
+
+        else if (message.content === '-help') {
+
+            const aembed = new MessageEmbed()
+                .setTitle("Help Menu")
+                .setAuthor("Sydney", "https://usdevs.net/SydHalloween2.gif","https://sydneym.dev")
+                .setColor(0x00AE86)
+                .setDescription("Need some help? We have you covered. While Syd's bot logger is simple by design, there are a few commands you should know, like -kick and -ban, our build in moderation tools. We also have a Q&A section (-qa)!")
+                .setFooter("Sydney's Message Logger V1, http://i.imgur.com/w1vhFSR.png")
+                .setThumbnail("https://images.discordapp.net/avatars/298822483060981760/c5f04275e99defe458fc7ebbef0d5e72.png?size=128")
+                .setTimestamp();
+            message.channel.send(aembed)
+
+        }
+
+        else if (message.content === '-qa') {
+            message.channel.send("Q&A TIME!")
+            message.channel.send(" ")
+            message.channel.send('***Q***: Is this logger against TOS?')
+            message.channel.send('A: No! Syds Message log is not against TOS, as it does not save ANY messages onto the host computer or VPS. All message logs are cleared after a restart.')
+        }
+    });
