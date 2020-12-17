@@ -6,11 +6,12 @@ console.log('Message logger is now running under key:');
 console.log(process.env.BOT_KEY);
 console.log();
 console.log(process.env.STARTMESSAGE);
-console.log('Version 2 - Go to GitHub to find the latest releases.')
+console.log('Version 1 - Go to GitHub to find the latest releases.')
 
 //Client Class?
 const { Client, MessageEmbed } = require('discord.js')
 const client = new Client();
+const WH_ID = 
 
 
 //Methods
@@ -32,7 +33,7 @@ client.on('ready', () => {
     console.log( );
     console.log(`[${process.env.DEV_NAME}'s message logger] ${client.user.tag} is logged in!`);
     console.log();
-    console.log('The bot will begin logging all messages.');
+    console.log('\x1b[41m%s\x1b[0m', 'The bot will begin logging all messages! ');
     console.log('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-')
 })
 
@@ -52,6 +53,7 @@ client.on('message', (message) => {
         message.channel.send(embed)
     } 
       else if (message.content === `-me`) {
+            console.log(`'\x1b[31m%s\x1b[0m', '[Command Notification] ${message.author.username} used the -me command!'`)
             message.channel.send(`Here is all of the info I can find on you`)
             message.channel.send(`USERNAME: ${message.author.username}`)
             message.channel.send(`ID: ${message.author.id}`);
@@ -74,17 +76,52 @@ client.on('message', (message) => {
             message.channel.send(dembed)
         }
     
-        else if (message.content === '-kick') {
+        else if (message.content.startsWith('-kick')) {
+            const user = message.mentions.users.first();
+            if (user) {
+              const member = message.guild.member(user);
+              if (member) {
+                member
+                  .kick('Optional reason that will display in the audit logs')
+                  .then(() => {
+                    message.reply(`Successfully kicked ${user.tag}`);
+                  })
+                  .catch(err => {
+                    message.reply('I was unable to kick the member');
+                    // Log the error
+                    console.error(err);
+                  });
+              } else {
+                message.reply("That user isn't in this guild!");
+              }
+            } else {
+              message.reply("You didn't mention the user to kick!");
+            }
+          }
 
-            //kicking
-
-        }
-
-        else if (message.content === '-ban') {
-
-            //banning
-
-        }
+        else if (message.content.startsWith('-ban')) {
+            const user = message.mentions.users.first();
+            if (user) {
+              const member = message.guild.member(user);
+              if (member) {
+                member
+                  .ban({
+                    reason: 'They were bad!',
+                  })
+                  .then(() => {
+                    message.reply(`Successfully banned ${user.tag}`);
+                  })
+                  .catch(err => {
+                    message.reply('I was unable to ban the member');
+                    console.error(err);
+                  });
+              } else {
+                message.reply("That user isn't in this guild!");
+              }
+            } else {
+              message.reply("You didn't mention the user to ban!");
+            }
+          }
 
         else if (message.content === '-help') {
 
@@ -105,5 +142,12 @@ client.on('message', (message) => {
             message.channel.send(" ")
             message.channel.send('***Q***: Is this logger against TOS?')
             message.channel.send('A: No! Syds Message log is not against TOS, as it does not save ANY messages onto the host computer or VPS. All message logs are cleared after a restart.')
+        }
+
+        else if (message.content === '-?') {
+            const hook = new client.WebhookClient(`${process.env.WH_ID}`, `$(process.env.WH_TOKEN)`);
+
+            hook.send('wut?');
+
         }
     });
